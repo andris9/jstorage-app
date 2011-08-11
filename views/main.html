@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>jStorage - simple JavaScript plugin to store data locally</title>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8">
+		
+		<style type="text/css">
+			
+			body{
+				font-family: Sans-serif;
+				font-size: 13px;
+				color: #333;
+			}
+		
+			table{
+				border-left: 1px solid #CDEB8B;
+				border-top: 1px solid #CDEB8B;
+			}
+			
+			h1{
+				padding-top: 50px;
+				font-size: 26px;
+				font-weight: bold;
+				border-bottom: 3px solid #CDEB8B;
+			}
+			
+			h2{
+				font-size: 18px;
+				font-weight: bold;
+				border-top: 1px solid #EEE;
+				border-bottom: 3px solid #CDEB8B;
+				margin-top: 20px;
+				padding-top: 20px;
+			}
+			
+			h3{
+				font-size: 14px;
+				font-weight: bold;
+			}
+			
+			td{
+				padding: 3px;
+				border-right: 1px solid #CDEB8B;
+				border-bottom: 1px solid #CDEB8B;
+			}
+			
+			thead{
+				background: #006E2E;
+				color: white;
+			}
+			
+			.container{
+				width: 728px;
+				margin: 10px auto;
+			}
+			
+			.green{
+				background: #6BBA70;
+				color: white;
+				text-align: center;
+			}
+
+			.red{
+				background: #D01F3C;
+				color: white;
+				text-align: center;
+			}
+
+			.yellow{
+				background: yellow;
+				color: black;
+				text-align: center;
+			}
+			
+		</style>
+		
+		<script src="/static/prototype.js"></script>
+		<script src="/static/jstorage.js"></script>
+		
+		<script>
+			function insert_value(){
+				var row = new Element("tr"),
+					key = $('key').value,
+					val = $('val').value;
+				if(!key){
+					alert("KEY NEEDS TO BE SET!");
+					$('key').focus();
+					return;
+				}
+				$.jStorage.set(key, val);
+				$('key').value = "";
+				$('val').value = "";
+				reDraw();
+			}
+			
+			function flush_data(){
+				$.jStorage.flush();
+				reDraw();
+			}
+			
+			function get_value(){
+				var value = $.jStorage.get($F("key2"));
+				alert(value);
+				$('key2').value = "";
+			}
+			
+			function flush_values(){
+				$.jStorage.flush();
+				reDraw();
+			}
+			
+			function reDraw(){
+
+				var row, del, index;
+
+				$$("tr[class~=rida]").each(function(c){c.remove();});
+
+				index = $.jStorage.index();
+				for(var i=0; i<index.length; i++){
+					row = new Element("tr",{className:"rida"});
+					row.insert(new Element("td").update(index[i]));
+					row.insert(new Element("td").update($.jStorage.get(index[i])));
+					del = new Element("a",{href:"javascript:void(0)"}).update("DEL");
+					(function(i){
+						del.observe("click", function(){
+							$.jStorage.deleteKey(i);
+							reDraw();
+						});
+					})(index[i])
+					row.insert(new Element("td").insert(del));
+					$("tulemused").insert(row);
+
+				}
+			}
+		</script>
+	
+		<!-- Exception Hub start -->
+		<script type="text/javascript">
+			var ehHost = (("https:" == document.location.protocol) ? "https://" : "http://");
+			document.write(unescape("%3Cscript src='" + ehHost + "js.exceptionhub.com/javascripts/eh.js' type='text/javascript'%3E%3C/script%3E"));
+		</script>
+		<script>
+			ExceptionHub.setup("b83fb652800fa143596deb6600fd9a2d", 116, 'production');
+		</script>
+		<!-- Exception Hub end -->
+		
+	</head>
+	<body>
+	
+	<div class="container">
+	
+	<h1>jStorage - store data locally with JavaScript</h1>
+	
+	<p><strong>jStorage</strong> is a simple wrapper plugin for Prototype, MooTools and jQuery to cache data (string, numbers, objects, even XML nodes) on browser side.</p>
+	
+	<p>jStorage was first developed under the name of <a href="http://www.domcached.com">DOMCached</a> but since a lot of features were dropped to make it simpler (like the support for namespaces and such) it was renamed. DOMCached had separate files for working with Prototype and jQuery but jStorage can handle both in one go.</p>
+
+	<h2>Index</h2>
+	<ol>
+		<li><a href="#basics">Basics</a></li>
+		<li><a href="#donwload">Download</a></li>
+		<li><a href="#test">Interactive test</a></li>
+		<li><a href="#support">Browser support</a></li>
+		<li><a href="#usage">Usage</a></li>
+		<li><a href="#example">Usage example</a></li>
+		<li><a href="#issues">Issues</a></li>
+		<li><a href="#other">How to use non-supported libraries</a></li>
+		<li><a href="#contact">Contact and Copyright</a></li>
+	</ol>
+
+    <div style="width: 728px; margin:0 auto">
+        <script type="text/javascript"><!--
+        google_ad_client = "pub-7677294784429110";
+        /* 728x90, created 11/8/10 */
+        google_ad_slot = "3636140900";
+        google_ad_width = 728;
+        google_ad_height = 90;
+        //-->
+        </script>
+        <script type="text/javascript" src="http://pagead2.googlesyndication.com/pagead/show_ads.js"></script>
+    </div>
+
+	<h2 id="basics">1. Basics</h2>
+
+	<p>jStorage makes use of HTML5 local storage where available and userData behavior in Internet Explorer older versions. Webkit SQLite is not supported.</p>
+
+	<p>Current availability: jStorage supports all major browsers - Internet Explorer 6+, Firefox 2+, Safari 4+, Chrome 4+, Opera 10.50+</p>
+
+	<p>If the browser doesn't support data caching, then no exceptions are raised - jStorage can still be used by the script but nothing is actually stored.</p> 
+	
+	<p>jStorage is really small, just about <b>2 kB</b> when minified (under 1kB when gzipped)!</p>
+	
+	<h2 id="donwload">2. Download</h2>
+	
+	<p><b>jStorage</b> can be downloaded at <a href="http://github.com/andris9/jStorage">github</a> (<a href="http://github.com/andris9/jStorage/raw/master/jstorage.js">direct download link</a>)</p>
+	
+	
+	<h2 id="test">3. Interactive test</h2>
+	<p>Add some values and refresh the page - if your browser supports storing local data, then the values should survive the page refresh.</p>
+	
+	<table cellspacing="0" cellpadding="0" style="width: 100%">
+	<thead>
+		<tr><td width="120">KEY</td><td>VALUE</td><td width="50">&nbsp;</td></tr>
+	</thead>
+	<tbody id="tulemused"></tbody>
+	<tfoot>
+		<tr>
+			<td><input type="text" id="key" name="key" value="" style="width: 110px;" /></td>
+			<td><input type="text" id="val" name="val" value="" style="width: 98%" /></td>
+			<td><a href="javascript:insert_value()">ADD</a></td>
+		</tr>
+		<tr>
+			<td><input type="text" id="key2" name="key2" value="" style="width: 110px;" /></td>
+			<td>Clicking "GET" alerts the value for provided key with the method <em>$.jStorage.get(key)</em></td>
+			<td><a href="javascript:get_value()">GET</a></td>
+		</tr>
+		<tr>
+			<td>&nbsp;</td>
+			<td>Clear all saved data</td>
+			<td><a href="javascript:flush_values()">FLUSH</a></td>
+		</tr>
+	</tfoot>
+	</table>
+	
+	<p><a href="/test">Test this functionality with a specific library</a></p>
+	<p><a href="/objtest">Unit tests</a></p>
+	
+	
+	<h2 id="support">4. Browser support</h2>
+	
+	<table  border="0" cellspacing="0" cellpadding="0" width="100%">
+		<thead>
+			<tr>
+				<td>Browser</td>
+				<td width="130" style="text-align: center;">Storage support</td>
+				<td width="130" style="text-align: center;">Survives browser restart</td>
+				<td width="130" style="text-align: center;">Survives browser crash</td>
+				<td width="130" style="text-align: center;">Storage size</td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr><td>Chrome 4</td>		<td class="green">+</td>	<td class="green">+</td>	<td class="green">+</td>	<td class="green">5 MB</td>		</tr>
+			<tr><td>Firefox 3.6</td>	<td class="green">+</td>	<td class="green">+</td>	<td class="green">+</td>	<td class="green">5 MB</td>		</tr>
+			<tr><td>Firefox 3</td>		<td class="green">+</td>	<td class="green">+</td>	<td class="green">+</td>	<td class="green">5 MB</td>		</tr>
+			<tr><td>Firefox 2</td>		<td class="green">+</td>	<td class="green">+</td>	<td class="green">+</td>	<td class="green">5 MB</td>		</tr>
+			<tr><td>IE8</td>			<td class="green">+</td>	<td class="green">+</td>	<td class="green">+</td>	<td class="green">10 MB</td>	</tr>
+			<tr><td>IE7</td>			<td class="green">+</td>	<td class="green">+</td>	<td class="green">+</td>	<td class="yellow">128 kB</td>	</tr>
+			<tr><td>IE6</td>			<td class="green">+</td>	<td class="green">+</td>	<td class="green">+</td>	<td class="yellow">128 kB</td>	</tr>
+			<tr><td>Opera 10.50</td>	<td class="green">+</td>	<td class="green">+</td>	<td class="red">-</td>		<td class="green">5 MB</td>		</tr>
+			<tr><td>Opera 10.10</td>	<td class="red">-</td>		<td>N/A</td>				<td>N/A</td>				<td>N/A</td>					</tr>
+			<tr><td>Safari 4</td>		<td class="green">+</td>	<td class="green">+</td>	<td class="green">+</td>	<td class="green">5 MB</td>		</tr>
+			<tr><td>Iphone Safari</td>	<td class="green">+</td>	<td class="green">+</td>	<td class="green">+</td>	<td class="green">5 MB</td>		</tr>
+			<tr><td>Safari 3</td>		<td class="red">-</td>		<td>N/A</td>				<td>N/A</td>				<td>N/A</td>					</tr>
+		</tbody>
+	</table>
+	
+	<h2 id="usage">5. Usage</h2>	
+	
+	<p>jStorage requires <a href="http://prototypejs.org/">Prototype</a>, <a href="http://mootools.net/">MooTools</a> or <a href="http://jquery.com">jQuery</a> + <a href="http://code.google.com/p/jquery-json/">jQuery-JSON</a>. Either way, the syntax stays the same.</p>
+	
+	<h3>set(key, value)</h3>
+
+	<pre>$.jStorage.set(key, value)</pre>
+
+	<p>Saves a value to local storage. <em>key</em> needs to be string otherwise an exception is thrown. <em>value</em> can be any JSONeable value, including objects and arrays or a XML node.<br />Currently XML nodes can't be nested inside other objects: $.jStorage.set("xml", xml_node) is OK but $.jStorage.set("xml", {xml: xml_node}) is not.</p>
+
+	<h3>get(key[, default])</h3>
+
+	<pre>value = $.jStorage.get(key)
+value = $.jStorage.get(key, "default value")
+	</pre>
+
+	<p><b>get</b> retrieves the value if <em>key</em> exists, or default if it doesn't. <em>key</em> needs to be string otherwise an exception is thrown. <em>default</em> can be any value.</p>
+
+	<h3>deleteKey(key)</h3>
+
+	<pre>$.jStorage.deleteKey(key)</pre>
+
+	<p>Removes a <em>key</em> from the storage. <em>key</em> needs to be string otherwise an exception is thrown.</p>
+
+	<h3>flush()</h3>
+
+	<pre>$.jStorage.flush()</pre>
+
+	<p>Clears the cache.</p> 
+
+	<h3>index()</h3>
+
+	<pre>$.jStorage.index()</pre>
+
+	<p>Returns all the keys currently in use as an array.<br />
+	<span style="font-family: monospace;">var index = $.jStorage.index();<br />console.log(index); // ["key1","key2","key3"]</span></p> 
+
+	<h3>storageSize()</h3>
+
+	<pre>$.jStorage.storageSize()</pre>
+
+	<p>Returns the size of the stored data in bytes</p>
+
+    <h3>currentBackend()</h3>
+
+    <pre>$.jStorage.currentBackend()</pre>
+
+    <p>Returns the storage engine currently in use or false if none</p>
+
+    <h3>reInit()</h3>
+
+    <pre>$.jStorage.reInit()</pre>
+
+    <p>Reloads the data from browser storage (for example if you have reasons to believe that the data has been altered in another tab etc.)</p>
+
+    <h3>storageAvailable()</h3>
+
+    <pre>$.jStorage.storageAvailable()</pre>
+
+    <p>Returns true if storage is available</p>
+
+	
+	<h2 id="example">6. Usage example</h2>
+	
+	<p>This example uses Prototype library</p>
+	
+	<pre>&lt;script src="prototype.js"&gt;&lt;/script&gt;
+&lt;script src="jstorage.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+// Check if "key" exists in the storage
+var value = $.jStorage.get("key");
+if(!value){
+	// if not - load the data from the server
+ 	value = load_data_from_server()
+ 	// and save it
+	$.jStorage.set("key",value);
+}
+&lt;/script&gt;</pre>
+	
+	<h2 id="issues">7. Issues</h2>
+	<ul>
+		<li><b>Why no <em>Webkit SQLite API</em> support?</b><br/>
+		<em>WebKit SQLite</em> - although being a fantastic API and definitely part of the future of the web - doesn't add much value to jStorage. <em>SQLite API</em> would only broaden support to Safari 3 (which is now more or less outdated anyway) since Safari 3 doesn't contain support for <em>localStorage</em>. The problem with <em>SQLite API</em> is that it's really slow (in terms of milliseconds, not as in hours) but jStorage is designed to be usable as soon as <em>jstorage.js</em> is loaded. <em>SQLite API</em> calls run in separate threads so when <em>jstorage.js</em> is loaded and an application tries to make uso of it already, then the data might not be available yet, since the SQLite thread hadn't finished its job.   
+		</li>
+		<li><b>Why would you want to use jStorage when cookies work already in every browser?</b><br/>
+		Cookies are not meant to save large quantities of data locally - they are meant to pass around ID values to keep track of users. Internet Explorer allows to use up to 20 cookies per domain with the payload of 4kB per cookie. It isn't very much, especially considering the need to chunk larger data into smaller bits. The fact that the data (max. 80 kB) is sent to the server with *every* call doesn't sound much of a good idea either.
+		</li>
+	</ul>
+
+	<h2 id="other">8. How to use non-supported libraries</h2>
+	
+	<p>jStorage is written in plain JavaScript and it requires a library (jQuery, Prototype, MooTools) for JSON encoding/decoding purposes only. If you have your own JSON implementation then you might want to skip the usage of an external library altogether.</p>
+	
+	<pre>&lt;script&gt;
+$ = {
+	toJSON   : your_json_encoder,
+	evalJSON : your_json_decoder
+}
+&lt;/script&gt;
+&lt;script src="jstorage.js"&gt;&lt;/script&gt;
+&lt;script&gt;alert($.jStorage.get("key"));&lt;/script&gt;</pre>
+
+	<p><b>NB!</b> <a href="http://www.json.org/js.html">json2.js</a> support is also included - but in this case you still need to define the dollar $ object (but no methods of it), since $ is required by the script.</p>  
+<pre>&lt;script src="json2.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+$ = {}
+&lt;/script&gt;
+&lt;script src="jstorage.js"&gt;&lt;/script&gt;
+&lt;script&gt;alert($.jStorage.get("key"));&lt;/script&gt;</pre>
+
+	<h2 id="contact">9. Contact and Copyright</h2>
+	
+	<p>&copy; 2010 Andris Reinman, <a href="mailto:andris.reinman@gmail.com">andris.reinman@gmail.com</a><br />jStorage is licensed under <a href="/static/license.txt">MIT-styled license</a>, so basically you can do whatever you want to do with it.</p>
+	
+	</div>
+	
+	<script>reDraw();</script>
+	
+	<script type="text/javascript">
+		var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+		document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+	</script>
+	<script type="text/javascript">
+		try {
+			var pageTracker = _gat._getTracker("UA-51322-27");
+			pageTracker._trackPageview();
+		} catch(err) {}
+	</script>
+	</body>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>jStorage - simple JavaScript plugin to store data locally</title>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8">
+		
+		<style type="text/css">
+			body{
+				font-family: Sans-serif;
+				font-size: 13px;
+				color: #333;
+			}
+		</style>
+		
+		<script src="/static/prototype.js"></script>
+		<script src="/static/jstorage.js"></script>
+		
+		<script>
+		decodeXML = function(xmlString){
+				var dom_parser = ("DOMParser" in window && (new DOMParser()).parseFromString) ||
+						(window.ActiveXObject && function(_xmlString) {
+					var xml_doc = new ActiveXObject('Microsoft.XMLDOM');
+					xml_doc.async = 'false';
+					xml_doc.loadXML(_xmlString);
+					return xml_doc;
+				}),
+				resultXML;
+				if(!dom_parser){
+					return false;
+				}
+				resultXML = dom_parser.call("DOMParser" in window && (new DOMParser()) || window, xmlString, 'text/xml');
+				return resultXML;
+			}
+
+		var xmlvalue = decodeXML('<?xml version="1.0" encoding="UTF-8"?><painting><img src="madonna.jpg" alt="Foligno Madonna, by Raphael"/><caption>teststring</caption></painting>'); 
+
+		$.jStorage.flush();	
+		$.jStorage.set("test_string","teststring");
+		$.jStorage.set("test_object",{str:"teststring"});
+		$.jStorage.set("test_xml",xmlvalue);
+		
+		</script>
+	</head>
+	<body>
+	<table style="font-size: 18px; font-weight: bold; width: 300px">
+		<tr style="background:#CDEB8B"><td>DATA SAVED</td></tr>
+		<tr id="backend_row"><td>Current backend: <span id="backend">not set</span></td></tr>
+		<script>
+		  $("backend_row").style.background = $.jStorage.currentBackend()?"#CDEB8B":"#FF1A00";
+		  $("backend").innerHTML = $.jStorage.currentBackend()?$.jStorage.currentBackend():"none";
+		</script>
+		<tr><td>
+		<table border="0" width="100%" style="font-size: 18px; font-weight: bold;">
+		    <tr>
+                <td colspan="2">Legend:</td>
+            </tr>
+			<tr>
+				<td width="50%" style="background:#CDEB8B;">OK</td>
+				<td width="50%" style="background:#FF1A00;">NOT OK</td>
+			</tr>
+			
+		</table>
+		</td></tr>
+	</table>
+	<iframe src="/iframe" style="width: 800px; height: 400px; border:0; margin:0; padding:0;" border="0"></iframe>
+	</body>
+</html>

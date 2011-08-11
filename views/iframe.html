@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>jStorage - simple JavaScript plugin to store data locally</title>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8">
+		
+		<style type="text/css">
+			body{
+				font-family: Sans-serif;
+				font-size: 13px;
+				color: #333;
+				margin:0;
+				padding:0;
+			}
+		</style>
+		
+		<script src="/static/prototype.js"></script>
+		<script src="/static/jstorage.js"></script>
+	</head>
+	<body>
+	<table style="font-size: 18px; font-weight: bold; width: 300px">
+	    <tr id="r11"><td>AVAILABLE</td></tr>
+		<tr id="r1"><td>STRING</td></tr>
+		<tr id="r2"><td>OBJECT</td></tr>
+		<tr id="r3"><td>XML</td></tr>
+		<tr id="r4"><td>INDEX</td></tr>
+		<tr id="r5"><td>FLUSH</td></tr>
+		<tr id="r7"><td>TEST STORAGE: <span id="r6">?</span> bytes</td></tr>
+		<tr id="r8"><td>REINIT</td></tr>
+	</table>
+	
+	<iframe id="riiframe" style="position: absolute; left: -1000px; top: 0;"></iframe>
+	
+	<script>
+	window.onload = function(){
+	    $("r11").style.background = $.jStorage.storageAvailable()?'#CDEB8B':'#FF1A00';
+		$("r1").style.background = $.jStorage.get("test_string")=="teststring"?'#CDEB8B':'#FF1A00';
+		$("r2").style.background = $.jStorage.get("test_object") && $.jStorage.get("test_object").str == "teststring"?'#CDEB8B':'#FF1A00';
+		var val3 = $.jStorage.get("test_xml");
+		try{
+			val3 = val3.getElementsByTagName('caption')[0].firstChild;
+			val3 = val3 && (val3.textContent || val3.text);
+		}catch(E){val3=false;}
+		
+		$("r3").style.background = val3 == "teststring"?'#CDEB8B':'#FF1A00';
+		$("r4").style.background = $.jStorage.index() && $.jStorage.index().length==3?'#CDEB8B':'#FF1A00';
+		var size = $.jStorage.storageSize();
+		$.jStorage.flush();
+		$("r6").innerHTML = size;
+		if($.jStorage.storageSize()<size){
+			$("r5").style.background = '#CDEB8B';
+			$("r7").style.background = '#CDEB8B';
+		}else{
+			$("r5").style.background = '#FF1A00';
+			$("r7").style.background = '#FF1A00';
+		}
+		document.getElementById("riiframe").src = "/riiframe";
+	}
+
+	function reinit(){
+		$.jStorage.reInit();
+		$("r8").style.background = $.jStorage.get("ri-test")=="tele-tere"?'#CDEB8B':'#FF1A00';
+		$.jStorage.flush();
+	}
+	
+	</script>
+	</body>
+</html>
+	

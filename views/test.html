@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>jStorage - simple JavaScript plugin to store data locally</title>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8">
+		
+		<style type="text/css">
+			
+			body{
+				font-family: Sans-serif;
+				font-size: 13px;
+				color: #333;
+			}
+		
+			table{
+				border-left: 1px solid #CDEB8B;
+				border-top: 1px solid #CDEB8B;
+			}
+			
+			h1{
+				padding-top: 50px;
+				font-size: 26px;
+				font-weight: bold;
+				border-bottom: 3px solid #CDEB8B;
+			}
+			
+			h2{
+				font-size: 18px;
+				font-weight: bold;
+				border-top: 1px solid #EEE;
+				border-bottom: 3px solid #CDEB8B;
+				margin-top: 20px;
+				padding-top: 20px;
+			}
+			
+			h3{
+				font-size: 14px;
+				font-weight: bold;
+			}
+			
+			td{
+				padding: 3px;
+				border-right: 1px solid #CDEB8B;
+				border-bottom: 1px solid #CDEB8B;
+			}
+			
+			thead{
+				background: #006E2E;
+				color: white;
+			}
+			
+			.container{
+				width: 700px;
+				margin: 10px auto;
+			}
+			
+		</style>
+		
+{% ifequal type "mootools" %}
+		<script src="/static/mootools.js"></script>
+{% endifequal %}{% ifequal type "jquery" %}
+		<script src="/static/jquery.js"></script>
+		<script src="/static/jquery-json.js"></script>
+{% endifequal %}{% ifequal type "prototype" %}
+		<script src="/static/prototype.js"></script>
+{% endifequal %}
+		<script src="/static/jstorage.js"></script>
+
+		
+		<script>
+			function insert_value(){
+				var row = document.createElement("tr"),
+					key = document.getElementById('key').value,
+					val = document.getElementById('val').value;
+				if(!key){
+					alert("KEY NEEDS TO BE SET!");
+					document.getElementById('key').focus();
+					return;
+				}
+				$.jStorage.set(key, val);
+				document.getElementById('key').value = "";
+				document.getElementById('val').value = "";
+				reDraw();
+			}
+			
+			function get_value(){
+				var value = $.jStorage.get(document.getElementById("key2").value);
+				alert(value);
+				document.getElementById('key2').value = "";
+			}
+			
+			function reDraw(){
+				var row, del, index;
+				var rows = document.getElementsByTagName("tr");
+				for(var i=rows.length-1; i>=0; i--){
+					if(rows[i].className == "rida"){
+						rows[i].parentNode.removeChild(rows[i]);
+					}
+				}
+
+				index = $.jStorage.index();
+				for(var i=0; i<index.length;i++){
+					row = document.createElement("tr");
+					row.className = "rida";
+					var t = document.createElement("td");
+					t.innerHTML = index[i];
+					row.appendChild(t);
+					t = document.createElement("td");
+					t.innerHTML  = $.jStorage.get(index[i]);
+					row.appendChild(t);
+					del = document.createElement("a");
+					del.href = "javascript:void(0)";
+					del.innerHTML = "DEL";
+					(function(i){
+						del.onclick = function(){
+							$.jStorage.deleteKey(i);
+							reDraw();
+						};
+					})(index[i])
+					t = document.createElement("td");
+					t.appendChild(del)
+					row.appendChild(t);
+					document.getElementById("tulemused").appendChild(row);
+
+				}
+			}
+		</script>
+		
+		<!-- Exception Hub start -->
+		<script type="text/javascript">
+			var ehHost = (("https:" == document.location.protocol) ? "https://" : "http://");
+			document.write(unescape("%3Cscript src='" + ehHost + "js.exceptionhub.com/javascripts/eh.js' type='text/javascript'%3E%3C/script%3E"));
+		</script>
+		<script>
+			ExceptionHub.setup("b83fb652800fa143596deb6600fd9a2d", 116, 'production');
+		</script>
+		<!-- Exception Hub end -->
+		
+	</head>
+	<body>
+	
+	<div class="container">
+
+	<h2>Interactive test</h2>
+	<p>Add some values and refresh the page - if your browser supports storing local data, then the values should survive the page refresh.</p>
+
+	<p>Currently using: <b>{{curlib}}</b><br />
+	Click to change: <a href="?type=prototype">Prototype</a>, <a href="?type=mootools">MooTools</a> or <a href="?type=jquery">jQuery</a></p>
+	
+	<table cellspacing="0" cellpadding="0" style="width: 100%">
+	<thead>
+		<tr><td width="120">KEY</td><td>VALUE</td><td width="50">&nbsp;</td></tr>
+	</thead>
+	<tbody id="tulemused"></tbody>
+
+	<tfoot>
+		<tr>
+			<td><input type="text" id="key" name="key" value="" style="width: 110px;" /></td>
+			<td><input type="text" id="val" name="val" value="" style="width: 98%" /></td>
+			<td><a href="javascript:insert_value()">ADD</a></td>
+		</tr>
+		<tr>
+			<td><input type="text" id="key2" name="key2" value="" style="width: 110px;" /></td>
+
+			<td>Clicking "GET" alerts the value for provided key with the method <em>$.jStorage.get(key)</em></td>
+			<td><a href="javascript:get_value()">GET</a></td>
+		</tr>
+	</tfoot>
+	</table>
+	<script>reDraw()</script>
+	</body>
+</html>
