@@ -151,7 +151,7 @@
 	
 	<h1>jStorage - store data locally with JavaScript</h1>
 	
-	<p><strong>jStorage</strong> is a simple wrapper plugin for Prototype, MooTools and jQuery to cache data (string, numbers, objects, even XML nodes) on browser side.</p>
+	<p><strong>jStorage</strong> is a simple wrapper plugin for Prototype, MooTools and jQuery to cache data (string, numbers, objects, even XML nodes) on browser side. Note that functions, DOM nodes, host objects and such can not be saved.</p>
 	
 	<p>jStorage was first developed under the name of <a href="http://www.domcached.com">DOMCached</a> but since a lot of features were dropped to make it simpler (like the support for namespaces and such) it was renamed. DOMCached had separate files for working with Prototype and jQuery but jStorage can handle both in one go.</p>
 
@@ -277,6 +277,13 @@ value = $.jStorage.get(key, "default value")
 	<pre>$.jStorage.deleteKey(key)</pre>
 
 	<p>Removes a <em>key</em> from the storage. <em>key</em> needs to be string otherwise an exception is thrown.</p>
+
+    <h3>setTTL(key, ttl)</h3>
+
+    <pre>$.jStorage.set("mykey", "keyvalue");
+$.jStorage.setTTL("mykey", 3000); // expires in 3 seconds</pre>
+
+    <p>Sets a TTL (in milliseconds) for an existing <em>key</em>.</p>
 
 	<h3>flush()</h3>
 
