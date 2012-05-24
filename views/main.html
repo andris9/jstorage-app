@@ -258,9 +258,9 @@
 	
 	<p>jStorage requires <a href="http://prototypejs.org/">Prototype</a>, <a href="http://mootools.net/">MooTools</a> or <a href="http://jquery.com">jQuery</a> + <a href="http://code.google.com/p/jquery-json/">jQuery-JSON</a>. Either way, the syntax stays the same.</p>
 	
-	<h3>set(key, value)</h3>
+	<h3>set(key, value[, options])</h3>
 
-	<pre>$.jStorage.set(key, value[, options])</pre>
+	<pre>$.jStorage.set(key, value, options)</pre>
 
 	<p>Saves a value to local storage. <em>key</em> needs to be string otherwise an exception is thrown. <em>value</em> can be any JSONeable value, including objects and arrays or a XML node.<br />Currently XML nodes can't be nested inside other objects: $.jStorage.set("xml", xml_node) is OK but $.jStorage.set("xml", {xml: xml_node}) is not.</p>
 
