@@ -260,9 +260,11 @@
 	
 	<h3>set(key, value)</h3>
 
-	<pre>$.jStorage.set(key, value)</pre>
+	<pre>$.jStorage.set(key, value[, options])</pre>
 
 	<p>Saves a value to local storage. <em>key</em> needs to be string otherwise an exception is thrown. <em>value</em> can be any JSONeable value, including objects and arrays or a XML node.<br />Currently XML nodes can't be nested inside other objects: $.jStorage.set("xml", xml_node) is OK but $.jStorage.set("xml", {xml: xml_node}) is not.</p>
+
+	<p>Options is an optional options object. Currently can only options.TTL can be used to set the TTL value to the key <code>$.jStorage.set(key, value, {TTL: 1000});</code>.</p>
 
 	<h3>get(key[, default])</h3>
 
@@ -283,7 +285,7 @@ value = $.jStorage.get(key, "default value")
     <pre>$.jStorage.set("mykey", "keyvalue");
 $.jStorage.setTTL("mykey", 3000); // expires in 3 seconds</pre>
 
-    <p>Sets a TTL (in milliseconds) for an existing <em>key</em>.</p>
+    <p>Sets a TTL (in milliseconds) for an existing <em>key</em>. Use 0 or negative value to clear TTL.</p>
 
 	<h3>flush()</h3>
 
