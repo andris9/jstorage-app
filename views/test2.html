@@ -39,6 +39,10 @@
 		$.jStorage.set("test_object",{str:"teststring"});
 		$.jStorage.set("test_xml",xmlvalue);
 		
+		setTimeout(function(){
+			$.jStorage.set("listenkey", "true");
+		}, 500);
+
 		</script>
 	</head>
 	<body>

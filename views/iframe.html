@@ -27,6 +27,7 @@
 		<tr id="r5"><td>FLUSH</td></tr>
 		<tr id="r7"><td>TEST STORAGE: <span id="r6">?</span> bytes</td></tr>
 		<tr id="r8"><td>REINIT</td></tr>
+		<tr id="r9"><td>LISTEN (TAKES TIME)</td></tr>
 	</table>
 	
 	<iframe id="riiframe" style="position: absolute; left: -1000px; top: 0;"></iframe>
@@ -55,6 +56,20 @@
 			$("r7").style.background = '#FF1A00';
 		}
 		document.getElementById("riiframe").src = "/riiframe";
+
+		var listenReady = false;
+		$.jStorage.listenKeyChange("listenkey", function(key, action){
+			if($.jStorage.get(key) == "true" && action == "updated"){
+				$("r9").style.background = '#CDEB8B';
+				listenReady = true;
+			}
+		});
+
+		setTimeout(function(){
+			if(listenReady)return;
+			$("r9").style.background = '#FF1A00';
+		}, 1500)
+
 	}
 
 	function reinit(){

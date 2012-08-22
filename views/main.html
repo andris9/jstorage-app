@@ -322,7 +322,7 @@ $.jStorage.setTTL("mykey", 3000); // expires in 3 seconds</pre>
 
     <pre>$.jStorage.reInit()</pre>
 
-    <p>Reloads the data from browser storage (for example if you have reasons to believe that the data has been altered in another tab etc.)</p>
+    <p>Reloads the data from browser storage</p>
 
     <h3>storageAvailable()</h3>
 
@@ -330,6 +330,15 @@ $.jStorage.setTTL("mykey", 3000); // expires in 3 seconds</pre>
 
     <p>Returns true if storage is available</p>
 
+    <h3>listenKeyChange(key, callback)</h3>
+
+    <pre>$.jStorage.listenKeyChange("mykey", function(key, action){
+        console.log(key + " has been " + action);
+    });</pre>
+
+    <p>Listens for updates for selected key. <b>NB!</b> even updates made in other
+    	windows/tabs are reflected, so this feature can also be used for some kind
+    	of publish/subscribe service.</p>
 	
 	<h2 id="example">6. Usage example</h2>
 	
