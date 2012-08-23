@@ -75,7 +75,7 @@
 		</style>
 		
 		<script src="/static/prototype.js"></script>
-		<script src="/static/jstorage.js"></script>
+		<script src="/static/jstorage.min.js"></script>
 		
 		<script>
 			function insert_value(){
@@ -151,9 +151,13 @@
 	
 	<h1>jStorage - store data locally with JavaScript</h1>
 	
-	<p><strong>jStorage</strong> is a simple wrapper plugin for Prototype, MooTools and jQuery to cache data (string, numbers, objects, even XML nodes) on browser side. Note that functions, DOM nodes, host objects and such can not be saved.</p>
-	
-	<p>jStorage was first developed under the name of <a href="http://www.domcached.com">DOMCached</a> but since a lot of features were dropped to make it simpler (like the support for namespaces and such) it was renamed. DOMCached had separate files for working with Prototype and jQuery but jStorage can handle both in one go.</p>
+	<p><strong>jStorage</strong> is a cross-browser key-value store database to store data locally in the browser - jStorage supports all major browsers, both in <strong>desktop</strong> (yes - even Internet Explorer 6) and in <strong>mobile</strong>.</p>
+
+	<p>Additionally jStorage is library agnostic, it works well with any other JavaScript library on the same webpage, be it jQuery, Prototype, MooTools or something else. Though you still need to have either a third party library (Prototype, MooTools) or <a href="https://github.com/douglascrockford/JSON-js/blob/master/json2.js">JSON2</a> on the page to support older IE versions.</p>
+
+	<p>jStorage supports storing Strings, Numbers, JavaScript objects, Arrays and even native XML nodes which kind of makes it a JSON storage. jStorage also supports setting TTL values for auto expiring stored keys and - best of all - notifying other tabs/windows when a key has been changed, which makes jStorage also a local PubSub platform for web applications.</p>
+
+	<p>jStorage is pretty small, about 8kB when minified.</p>
 
 	<h2>Donate</h2>
 
@@ -270,7 +274,7 @@
 
 	<p>Saves a value to local storage. <em>key</em> needs to be string otherwise an exception is thrown. <em>value</em> can be any JSONeable value, including objects and arrays or a XML node.<br />Currently XML nodes can't be nested inside other objects: $.jStorage.set("xml", xml_node) is OK but $.jStorage.set("xml", {xml: xml_node}) is not.</p>
 
-	<p>Options is an optional options object. Currently only available option is <code>options.TTL</code> which can be used to set the TTL value to the key (<code>$.jStorage.set(key, value, {TTL: 1000});</code>).</p>
+	<p>Options is an optional options object. Currently only available option is <code>options.TTL</code> which can be used to set the TTL value to the key (<code>$.jStorage.set(key, value, {TTL: 1000});</code>). <strong>NB!</strong> if not TTL option has been set, any currently used TTL value for the key will be set to 0.</p>
 
 	<h3>get(key[, default])</h3>
 
@@ -292,6 +296,12 @@ value = $.jStorage.get(key, "default value")
 $.jStorage.setTTL("mykey", 3000); // expires in 3 seconds</pre>
 
     <p>Sets a TTL (in milliseconds) for an existing <em>key</em>. Use 0 or negative value to clear TTL.</p>
+
+    <h3>getTTL(key)</h3>
+
+    <pre>ttl = $.jStorage.getTTL("mykey"); // TTL in milliseconds or 0</pre>
+
+    <p>Gets remaining TTL (in milliseconds) for a <em>key</em> or 0 if not TTL has been set.</p>
 
 	<h3>flush()</h3>
 
@@ -333,12 +343,18 @@ $.jStorage.setTTL("mykey", 3000); // expires in 3 seconds</pre>
     <h3>listenKeyChange(key, callback)</h3>
 
     <pre>$.jStorage.listenKeyChange("mykey", function(key, action){
-        console.log(key + " has been " + action);
-    });</pre>
+    console.log(key + " has been " + action);
+});</pre>
 
     <p>Listens for updates for selected key. <b>NB!</b> even updates made in other
     	windows/tabs are reflected, so this feature can also be used for some kind
     	of publish/subscribe service.</p>
+
+    <h3>stopListening(key[, callback])</h3>
+
+    <pre>$.jStorage.stopListening("mykey"); // cancel all listeners for "mykey" change</pre>
+
+    <p>Stops listening for key change. If callback is set, only the used callback will be cleared, otherwise all listeners will be dropped.</p>
 	
 	<h2 id="example">6. Usage example</h2>
 	
@@ -390,7 +406,7 @@ $ = {}
 
 	<h2 id="contact">9. Contact and Copyright</h2>
 	
-	<p>&copy; 2010 Andris Reinman, <a href="mailto:andris.reinman@gmail.com">andris.reinman@gmail.com</a><br />jStorage is licensed under <a href="/static/license.txt">MIT-styled license</a>, so basically you can do whatever you want to do with it.</p>
+	<p>&copy; 2010 - 2012 Andris Reinman, <a href="mailto:andris.reinman@gmail.com">andris.reinman@gmail.com</a><br />jStorage is licensed under <a href="/static/license.txt">MIT-styled license</a>, so basically you can do whatever you want to do with it.</p>
 	
 	</div>
 	
