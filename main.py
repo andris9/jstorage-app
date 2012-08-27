@@ -39,6 +39,13 @@ class AssTestHandler(webapp.RequestHandler):
     path = os.path.join(os.path.dirname(__file__), 'views/test2.html')
     self.response.out.write(template.render(path, template_values))
 
+class PubSubHandler(webapp.RequestHandler):
+
+  def get(self):
+    template_values = {}
+    path = os.path.join(os.path.dirname(__file__), 'views/pubsub.html')
+    self.response.out.write(template.render(path, template_values))
+
 class IframeHandler(webapp.RequestHandler):
 
   def get(self):
@@ -77,6 +84,7 @@ def main():
                                         ('/test', TestHandler),
                                         ('/objtest', AssTestHandler),
                                         ('/iframe', IframeHandler),
+                                        ('/pubsub', PubSubHandler),
                                         ('/riiframe', RIIframeHandler)],
                                        debug=True)
   wsgiref.handlers.CGIHandler().run(application)

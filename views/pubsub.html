@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>jStorage - simple JavaScript plugin to store data locally</title>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8">
+        
+        <style type="text/css">
+            
+            body{
+                font-family: Sans-serif;
+                font-size: 13px;
+                color: #333;
+            }
+        
+            table{
+                border-left: 1px solid #CDEB8B;
+                border-top: 1px solid #CDEB8B;
+            }
+            
+            h1{
+                padding-top: 50px;
+                font-size: 26px;
+                font-weight: bold;
+                border-bottom: 3px solid #CDEB8B;
+            }
+            
+            h2{
+                font-size: 18px;
+                font-weight: bold;
+                border-top: 1px solid #EEE;
+                border-bottom: 3px solid #CDEB8B;
+                margin-top: 20px;
+                padding-top: 20px;
+            }
+            
+            h3{
+                font-size: 14px;
+                font-weight: bold;
+            }
+            
+            td{
+                padding: 3px;
+                border-right: 1px solid #CDEB8B;
+                border-bottom: 1px solid #CDEB8B;
+            }
+            
+            thead{
+                background: #006E2E;
+                color: white;
+            }
+            
+            .container{
+                width: 700px;
+                margin: 10px auto;
+            }
+            
+        </style>
+        
+        <script src="/static/prototype.js"></script>
+        <script src="/static/jstorage.min.js"></script>
+
+        
+        <script>
+            function sync(){
+                $.jStorage.publish("sync-textarea", $("data").value);
+            }
+            $.jStorage.subscribe("sync-textarea", function(channel, data){
+                $("data").value = data;
+            });
+        </script>
+        
+        <!-- Exception Hub start -->
+        <script type="text/javascript">
+            var ehHost = (("https:" == document.location.protocol) ? "https://" : "http://");
+            document.write(unescape("%3Cscript src='" + ehHost + "js.exceptionhub.com/javascripts/eh.js' type='text/javascript'%3E%3C/script%3E"));
+        </script>
+        <script>
+            ExceptionHub.setup("b83fb652800fa143596deb6600fd9a2d", 116, 'production');
+        </script>
+        <!-- Exception Hub end -->
+        
+    </head>
+    <body>
+    
+    <div class="container">
+
+    <h2>Interactive test - publish/subscribe</h2>
+    
+    <p>Open the same page in other tabs or windows of the same browser</p>
+    
+    <p><textarea id="data" style="width: 600px; height: 100px;"></textarea></p>
+    <p><input type="button" id="nupp" value="Sync entered data with other tabs/windows" onclick="sync()"/></p>
+
+    </body>
+</html>

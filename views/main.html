@@ -155,7 +155,7 @@
 
 	<p>Additionally jStorage is library agnostic, it works well with any other JavaScript library on the same webpage, be it jQuery, Prototype, MooTools or something else. Though you still need to have either a third party library (Prototype, MooTools) or <a href="https://github.com/douglascrockford/JSON-js/blob/master/json2.js">JSON2</a> on the page to support older IE versions.</p>
 
-	<p>jStorage supports storing Strings, Numbers, JavaScript objects, Arrays and even native XML nodes which kind of makes it a JSON storage. jStorage also supports setting TTL values for auto expiring stored keys and - best of all - notifying other tabs/windows when a key has been changed, which makes jStorage also a local PubSub platform for web applications.</p>
+	<p>jStorage supports storing Strings, Numbers, JavaScript objects, Arrays and even native XML nodes which kind of makes it a JSON storage. jStorage also supports setting TTL values for auto expiring stored keys and - best of all - notifying other tabs/windows when a key has been changed which makes jStorage also a local PubSub platform for web applications.</p>
 
 	<p>jStorage is pretty small, about 8kB when minified.</p>
 
@@ -232,6 +232,7 @@
 	</tfoot>
 	</table>
 	
+	<p><a href="/pubsub">Test Publish/Subscribe</a></p>
 	<p><a href="/test">Test this functionality with a specific library</a></p>
 	<p><a href="/objtest">Unit tests</a></p>
 	
@@ -339,6 +340,20 @@ $.jStorage.setTTL("mykey", 3000); // expires in 3 seconds</pre>
     <pre>$.jStorage.storageAvailable()</pre>
 
     <p>Returns true if storage is available</p>
+
+    <h3>subscribe(channel, callback)</h3>
+
+    <pre>$.jStorage.subscribe("ch1", function(channel, payload){
+    console.log(payload+ " from " + channel);
+});</pre>
+
+    <p>Subscribes to a Publish/Subscribe channel (see <a href="/pubsub">demo</a>)</p>
+
+    <h3>publish(channel, payload)</h3>
+
+    <pre>$.jStorage.publish("ch1", "data");</pre>
+
+    <p>Publishes payload to a Publish/Subscribe channel (see <a href="/pubsub">demo</a>)</p>
 
     <h3>listenKeyChange(key, callback)</h3>
 
