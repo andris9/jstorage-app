@@ -155,7 +155,7 @@
 
 	<p>Additionally jStorage is library agnostic, it works well with any other JavaScript library on the same webpage, be it jQuery, Prototype, MooTools or something else. Though you still need to have either a third party library (Prototype, MooTools) or <a href="https://github.com/douglascrockford/JSON-js/blob/master/json2.js">JSON2</a> on the page to support older IE versions.</p>
 
-	<p>jStorage supports storing Strings, Numbers, JavaScript objects, Arrays and even native XML nodes which kind of makes it a JSON storage. jStorage also supports setting TTL values for auto expiring stored keys and - best of all - notifying other tabs/windows when a key has been changed which makes jStorage also a local PubSub platform for web applications.</p>
+	<p>jStorage supports storing Strings, Numbers, JavaScript objects, Arrays and even native XML nodes. jStorage also supports setting TTL values for auto expiring stored keys and - best of all - notifying other tabs/windows when a key has been changed or publishing/subscribing to events from the same or another tab/window, which makes jStorage also a local PubSub platform for web applications.</p>
 
 	<p>jStorage is pretty small, about 8kB when minified.</p>
 
@@ -172,9 +172,9 @@
 		<li><a href="#test">Interactive test</a></li>
 		<li><a href="#support">Browser support</a></li>
 		<li><a href="#usage">Usage</a></li>
+		<li><a href="#references">Function reference</a></li>
 		<li><a href="#example">Usage example</a></li>
 		<li><a href="#issues">Issues</a></li>
-		<li><a href="#other">How to use non-supported libraries</a></li>
 		<li><a href="#contact">Contact and Copyright</a></li>
 	</ol>
 
@@ -192,13 +192,13 @@
 
 	<h2 id="basics">1. Basics</h2>
 
-	<p>jStorage makes use of HTML5 local storage where available and userData behavior in Internet Explorer older versions. Webkit SQLite is not supported.</p>
+	<p>jStorage makes use of HTML5 local storage where available and userData behavior in Internet Explorer older versions.</p>
 
 	<p>Current availability: jStorage supports all major browsers - Internet Explorer 6+, Firefox 2+, Safari 4+, Chrome 4+, Opera 10.50+</p>
 
 	<p>If the browser doesn't support data caching, then no exceptions are raised - jStorage can still be used by the script but nothing is actually stored.</p> 
 	
-	<p>jStorage is really small, just about <b>2 kB</b> when minified (under 1kB when gzipped)!</p>
+	<p>jStorage is really small, just about <b>8 kB</b> when minified (under 4kB when gzipped)!</p>
 	
 	<h2 id="download">2. Download</h2>
 	
@@ -265,10 +265,25 @@
 		</tbody>
 	</table>
 	
-	<h2 id="usage">5. Usage</h2>	
+	<h2 id="usage">5. Usage</h2>
 	
 	<p>jStorage requires <a href="http://prototypejs.org/">Prototype</a>, <a href="http://mootools.net/">MooTools</a> or <a href="http://jquery.com">jQuery</a> + <a href="http://code.google.com/p/jquery-json/">jQuery-JSON</a> or <a href="https://github.com/douglascrockford/JSON-js/blob/master/json2.js">JSON2</a>. Either way, the syntax stays the same.</p>
 	
+	<p><b>Simple setup to support jStorage with JSON2</b></p>
+
+	<pre>&lt;script src="https://raw.github.com/douglascrockford/JSON-js/master/json2.js"&gt;&lt;/script&gt;
+&lt;script src="https://raw.github.com/andris9/jStorage/master/jstorage.js"&gt;&lt;/script&gt;
+&lt;script&gt; /* $.jStorage is now available */ &lt;/script&gt;</pre>
+
+	<p><b>Setup with jQuery2</b></p>
+
+	<pre>&lt;script src="https://raw.github.com/douglascrockford/JSON-js/master/json2.js"&gt;&lt;/script&gt;
+&lt;script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.8.0/jquery.min.js"&gt;&lt;/script&gt;
+&lt;script src="https://raw.github.com/andris9/jStorage/master/jstorage.js"&gt;&lt;/script&gt;
+&lt;script&gt; /* $.jStorage is now available */ &lt;/script&gt;</pre>
+
+    <h2 id="reference">6. Function reference</h2>
+
 	<h3>set(key, value[, options])</h3>
 
 	<pre>$.jStorage.set(key, value, options)</pre>
@@ -371,7 +386,7 @@ $.jStorage.setTTL("mykey", 3000); // expires in 3 seconds</pre>
 
     <p>Stops listening for key change. If callback is set, only the used callback will be cleared, otherwise all listeners will be dropped.</p>
 	
-	<h2 id="example">6. Usage example</h2>
+	<h2 id="example">7. Usage example</h2>
 	
 	<p>This example uses Prototype library</p>
 	
@@ -388,36 +403,12 @@ if(!value){
 }
 &lt;/script&gt;</pre>
 	
-	<h2 id="issues">7. Issues</h2>
+	<h2 id="issues">8. Issues</h2>
 	<ul>
-		<li><b>Why no <em>Webkit SQLite API</em> support?</b><br/>
-		<em>WebKit SQLite</em> - although being a fantastic API and definitely part of the future of the web - doesn't add much value to jStorage. <em>SQLite API</em> would only broaden support to Safari 3 (which is now more or less outdated anyway) since Safari 3 doesn't contain support for <em>localStorage</em>. The problem with <em>SQLite API</em> is that it's really slow (in terms of milliseconds, not as in hours) but jStorage is designed to be usable as soon as <em>jstorage.js</em> is loaded. <em>SQLite API</em> calls run in separate threads so when <em>jstorage.js</em> is loaded and an application tries to make uso of it already, then the data might not be available yet, since the SQLite thread hadn't finished its job.   
-		</li>
 		<li><b>Why would you want to use jStorage when cookies work already in every browser?</b><br/>
 		Cookies are not meant to save large quantities of data locally - they are meant to pass around ID values to keep track of users. Internet Explorer allows to use up to 20 cookies per domain with the payload of 4kB per cookie. It isn't very much, especially considering the need to chunk larger data into smaller bits. The fact that the data (max. 80 kB) is sent to the server with *every* call doesn't sound much of a good idea either.
 		</li>
 	</ul>
-
-	<h2 id="other">8. How to use non-supported libraries</h2>
-	
-	<p>jStorage is written in plain JavaScript and it requires a library (jQuery, Prototype, MooTools) for JSON encoding/decoding purposes only. If you have your own JSON implementation then you might want to skip the usage of an external library altogether.</p>
-	
-	<pre>&lt;script&gt;
-$ = {
-	toJSON   : your_json_encoder,
-	evalJSON : your_json_decoder
-}
-&lt;/script&gt;
-&lt;script src="jstorage.js"&gt;&lt;/script&gt;
-&lt;script&gt;alert($.jStorage.get("key"));&lt;/script&gt;</pre>
-
-	<p><b>NB!</b> <a href="http://www.json.org/js.html">json2.js</a> support is also included - but in this case you still need to define the dollar $ object (but no methods of it), since $ is required by the script.</p>  
-<pre>&lt;script src="json2.js"&gt;&lt;/script&gt;
-&lt;script&gt;
-$ = {}
-&lt;/script&gt;
-&lt;script src="jstorage.js"&gt;&lt;/script&gt;
-&lt;script&gt;alert($.jStorage.get("key"));&lt;/script&gt;</pre>
 
 	<h2 id="contact">9. Contact and Copyright</h2>
 	
