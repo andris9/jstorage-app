@@ -157,11 +157,6 @@
 
 	<p>jStorage supports storing Strings, Numbers, JavaScript objects, Arrays and even native XML nodes. jStorage also supports setting TTL values for auto expiring stored keys and - best of all - notifying other tabs/windows when a key has been changed or publishing/subscribing to events from the same or another tab/window, which makes jStorage also a local PubSub platform for web applications.</p>
 
-	<p>If jStorage is loaded on the page localStorage and sessionStorage polyfills are added to IE6 and IE7 in addition to regular $.jStorage methods.</p>
-
-	<p>You can use regular setItem/getItem
-methods with the polyfills but getter/setters can be used as well - <code>localStorage.mykey = myval;</code> is absolutely valid with jStorage. The only downside is that you can't use <em>onstorage</em> event, you need to fall back to <em>listenKeyChange</em> instead.</p>
-
 	<p>jStorage is pretty small, about 10kB when minified and 4kB gzipped.</p>
 
 	<h2>Donate</h2>
@@ -179,7 +174,6 @@ methods with the polyfills but getter/setters can be used as well - <code>localS
 		<li><a href="#usage">Usage</a></li>
 		<li><a href="#references">Function reference</a></li>
 		<li><a href="#example">Usage example</a></li>
-		<li><a href="#polyfill">localStorage polyfill</a></li>
 		<li><a href="#issues">Issues</a></li>
 		<li><a href="#contact">Contact and Copyright</a></li>
 	</ol>
@@ -408,34 +402,15 @@ if(!value){
 	$.jStorage.set("key",value);
 }
 &lt;/script&gt;</pre>
-	
-	<h2 id="polyfill">8. localStorage polyfill</h2>
 
-	<p>jStorage provides localStorage polyfill for IE6/7 so if you don't like the bells and whistles of jStorage you can fall back to regular localStorage and sessionStorage instead.</p>
-
-	<p>What's the best for jStorage provided polyfill, is that you can use setter/getter based API if you want to - <code>localStorage.mykey = value;</code> or <code>alert(localStorage.mykey);</code> are totally fine to use!</p>
-
-	<pre>&lt;script src="prototype.js"&gt;&lt;/script&gt;
-&lt;script src="jstorage.js"&gt;&lt;/script&gt;
-&lt;script&gt;
-
-// localStorage and sessionStorage are now available in almost every browser
-localStorage.setItem("testkey1", "testval1");
-
-// and even setter/getter based API can be used!
-localStorage.testkey2 = "testval2";
-&lt;/script&gt;</pre>
-
-	<p>You can't use <em>onstorage</em> events in IE6/7, you need to fallback to <code>$.jStorage.listenKeyChange</code> instead if you need this feature.</p>
-
-	<h2 id="issues">9. Issues</h2>
+	<h2 id="issues">8. Issues</h2>
 	<ul>
 		<li><b>Why would you want to use jStorage when cookies work already in every browser?</b><br/>
 		Cookies are not meant to save large quantities of data locally - they are meant to pass around ID values to keep track of users. Internet Explorer allows to use up to 20 cookies per domain with the payload of 4kB per cookie. It isn't very much, especially considering the need to chunk larger data into smaller bits. The fact that the data (max. 80 kB) is sent to the server with *every* call doesn't sound much of a good idea either.
 		</li>
 	</ul>
 
-	<h2 id="contact">10. Contact and Copyright</h2>
+	<h2 id="contact">9. Contact and Copyright</h2>
 	
 	<p>&copy; 2010 - 2012 Andris Reinman, <a href="mailto:andris.reinman@gmail.com">andris.reinman@gmail.com</a><br />jStorage is licensed under <a href="/static/license.txt">MIT-styled license</a>, so basically you can do whatever you want to do with it.</p>
 	
