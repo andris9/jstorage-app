@@ -388,9 +388,27 @@ $.jStorage.setTTL("mykey", 3000); // expires in 3 seconds</pre>
 	
 	<h2 id="example">7. Usage example</h2>
 	
-	<p>This example uses Prototype library</p>
+	<h3>jQuery</h3>h3>
+
+	<p>jQuery doesn't come with built in JSON encoder/decoder so if you need to support IE6/IE7 you should include one yourselt like in the example</p>
+
+	<pre>&lt;script src="//cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"&gt;&lt;/script&gt;
+&lt;script src="//code.jquery.com/jquery-1.9.1.min.js"&gt;&lt;/script&gt;
+&lt;script src="jstorage.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+// Check if "key" exists in the storage
+var value = $.jStorage.get("key");
+if(!value){
+	// if not - load the data from the server
+ 	value = load_data_from_server()
+ 	// and save it
+	$.jStorage.set("key",value);
+}
+&lt;/script&gt;</pre>
+
+	<h3>Prototype</h3>
 	
-	<pre>&lt;script src="prototype.js"&gt;&lt;/script&gt;
+	<pre>&lt;script src="//ajax.googleapis.com/ajax/libs/prototype/1.7.1.0/prototype.js"&gt;&lt;/script&gt;
 &lt;script src="jstorage.js"&gt;&lt;/script&gt;
 &lt;script&gt;
 // Check if "key" exists in the storage
